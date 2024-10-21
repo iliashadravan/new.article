@@ -33,7 +33,6 @@ Route::middleware('jwt')->group(function () {
         });
         Route::prefix('comments')->controller(CommentController::class)->group(function () {
             Route::post('/{article}', 'comment');
-            Route::post('/reply/{comment}', 'reply');
         });
     });
 
