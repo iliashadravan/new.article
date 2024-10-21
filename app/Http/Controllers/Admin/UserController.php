@@ -3,23 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        // اعتبارسنجی اطلاعات ورودی
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:3',
-        ]);
-
         // به‌روزرسانی اطلاعات کاربر
-        $user->name = $request->name;
-        $user->email = $request->email;
+        if ($request->filled('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->filled('email')) {
+            $user->email = $request->email;
+        }
 
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);

@@ -19,6 +19,7 @@ class ArticleResource extends JsonResource
             'body' => $this->body,
             'likes_count' => $this->likes->count(),
             'average_rate' => $this->averageRating() ?? 'No rating',
+            'published_by' => $this->user->name ?? 'No user',
         ];
     }
 }

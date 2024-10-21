@@ -18,8 +18,7 @@ class CheckUserAuthenticated
     {
         // بررسی اینکه آیا کاربر ورود کرده است یا خیر
         if (!Auth::check()) {
-            // اگر کاربر ورود نکرده باشد، به صفحه لاگین هدایت می‌شود
-            return redirect()->route('login')->with('error', 'Please login to access this page.');
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         return $next($request);

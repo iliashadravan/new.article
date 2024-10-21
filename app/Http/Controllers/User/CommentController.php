@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CommentRequest;
 use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -10,12 +11,8 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
 // ذخیره کامنت جدید برای مقاله
-    public function comment(Request $request, Article $article)
+    public function comment(CommentRequest $request, Article $article)
     {
-        $request->validate([
-            'body' => 'required|string|max:1000',
-        ]);
-
 // ایجاد کامنت جدید برای مقاله
         $article->comments()->create([
             'body' => $request->body,
@@ -23,18 +20,14 @@ class CommentController extends Controller
         ]);
 
         return response()->json([
-         'message' => 'Comment added',
-         'success' => true,
-    ]);
+            'message' => 'Comment added',
+            'success' => true,
+        ]);
     }
 
 // ذخیره ریپلای برای یک کامنت
-    public function reply(Request $request, Comment $comment)
+    public function reply(CommentRequest $request, Comment $comment)
     {
-        $request->validate([
-            'body' => 'required|string|max:1000',
-        ]);
-
         // ایجاد ریپلای جدید برای کامنت
         $comment->replies()->create([
             'body' => $request->body,
@@ -46,5 +39,4 @@ class CommentController extends Controller
             'success' => true,
         ]);
     }
-
 }

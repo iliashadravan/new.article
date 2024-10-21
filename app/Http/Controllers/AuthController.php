@@ -3,26 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validate_data = $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:3',
-        ]);
+        $request->validated();
 
         // ایجاد کاربر جدید
         $user = User::create([
-            'name' => $validate_data['name'],
-            'email' => $validate_data['email'],
-            'password' => Hash::make($validate_data['password']),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
         // ایجاد توکن برای کاربر
@@ -35,35 +31,21 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validate_data = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:3',
-        ]);
-
+        $request->validated();
         // اعتبارسنجی کاربر
-        if (!$token = JWTAuth::attempt($validate_data)) {
+        if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'ایمیل یا رمز عبور اشتباه است.'], 401);
         }
 
         // پیدا کردن کاربر با ایمیل
-        $user = User::where('email', $validate_data['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
         return response()->json([
             'message' => 'ورود موفقیت‌آمیز بود.',
             'user' => $user,
             'token' => $token,
-        ], 200);
-    }
-
-    public function logout(Request $request)
-    {
-        // خروج کاربر و از بین بردن توکن
-        JWTAuth::invalidate(JWTAuth::getToken());
-
-        return response()->json([
-            'message' => 'خروج موفقیت‌آمیز بود.',
         ], 200);
     }
 

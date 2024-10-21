@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,31 +19,18 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function update(Article $article)
+    public function update(UpdateArticleRequest $request, Article $article)
     {
-        // اعتبارسنجی ورودی‌ها
-        $validator = Validator::make(request()->all(), [
-            'title' => 'required|min:3|max:50',
-            'body' => 'required',
-            'categories' => 'required|array',
-            'categories.*' => 'exists:categories,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $validated = $request->validated();
 
         // به روز رسانی مقاله
         $article->update([
-            'title' => $validator->validated()['title'],
-            'body' => $validator->validated()['body'],
+            'title' => $validated['title'],
+            'body' => $validated['body'],
         ]);
 
         // همگام‌سازی دسته‌بندی‌ها با مقاله
-        $article->categories()->sync($validator->validated()['categories']);
+        $article->categories()->sync($validated['categories']);
 
         return response()->json([
             'success' => true,
@@ -50,6 +38,7 @@ class ArticleController extends Controller
             'article' => $article
         ]);
     }
+
 
     public function delete(Article $article)
     {

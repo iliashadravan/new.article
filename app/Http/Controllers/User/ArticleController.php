@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
@@ -11,24 +13,20 @@ use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
-    public function store()
+    public function store(CreateRequest $request)
     {
-        $validate_data = $this->validate(request(), [
-            'title' => 'required|min:3|max:100',
-            'body' => 'required|min:5',
-            'categories' => 'required|array',
-            'categories.*' => 'exists:categories,id',
-        ]);
+        // دریافت داده‌های اعتبارسنجی‌شده از درخواست
+        $validated_data = $request->validated();
 
         // ایجاد مقاله جدید
         $article = Article::create([
-            'title' => $validate_data['title'],
-            'body' => $validate_data['body'],
-            'user_id' => auth()->id(), // اینجا کاربر لاگین شده را به مقاله نسبت می‌دهید
+            'title' => $validated_data['title'],
+            'body' => $validated_data['body'],
+            'user_id' => auth()->id(), // کاربر لاگین شده را به مقاله نسبت می‌دهیم
         ]);
 
         // پیوست کردن دسته‌بندی‌ها به مقاله
-        $article->categories()->attach($validate_data['categories']);
+        $article->categories()->attach($validated_data['categories']);
 
         return response()->json([
             'success' => true,
@@ -37,27 +35,23 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function update(Request $request, Article $article)
+    public function update(UpdateArticleRequest $request, Article $article)
     {
-        $validate_data = Validator::make($request->all(), [
-            'title' => 'required|min:3|max:50',
-            'body' => 'required',
-            'categories' => 'required|array',
-            'categories.*' => 'exists:categories,id',
-        ])->validated();
+        // دریافت داده‌های اعتبارسنجی‌شده از درخواست
+        $validated_data = $request->validated();
 
         // به روز رسانی مقاله
         $article->update([
-            'title' => $validate_data['title'],
-            'body' => $validate_data['body'],
+            'title' => $validated_data['title'],
+            'body' => $validated_data['body'],
         ]);
 
         // همگام‌سازی دسته‌بندی‌ها با مقاله
-        $article->categories()->sync($validate_data['categories']);
+        $article->categories()->sync($validated_data['categories']);
 
         return response()->json([
             'success' => true,
-            'message' => 'Article updated successfully!',
+            'message' => 'مقاله با موفقیت به‌روزرسانی شد!',
             'article' => $article
         ]);
     }
