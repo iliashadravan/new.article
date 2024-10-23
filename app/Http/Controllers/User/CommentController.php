@@ -16,7 +16,6 @@ class CommentController extends Controller
         $commentableType = $request->commentable_type;
         $commentableId = $request->commentable_id;
 
-        // اگر نوع کامنت "reply" است، بررسی وجود کامنت والد
         if ($commentableType === 'reply') {
             if (!$this->isParentCommentValid($commentableId)) {
                 return response()->json([
