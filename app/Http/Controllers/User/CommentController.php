@@ -10,25 +10,24 @@ use App\Models\Comment;
 class CommentController extends Controller
 {
     // ذخیره کامنت یا ریپلای
-    public function comment(CommentRequest $request, Article $article)
+    public function comment(CommentRequest $request, Article $article, Comment $comment = null)
     {
         $data = [
             'body' => $request->body,
             'user_id' => auth()->id(),
         ];
 
-        // بررسی اینکه آیا نوع کامنت reply است یا comment
-        if ($request->type === 'reply') {
-            // اگر نوع ریپلای است، ریپلای به کامنت مشخص شده ایجاد می‌شود
-            $comment = Comment::findOrFail($request->comment_id);
+        // بررسی اینکه آیا instance از Comment به متد پاس داده شده است یا نه
+        if ($comment) {
+            // اگر کامنت وجود داشته باشد، ریپلای به آن ایجاد می‌شود
             $comment->replies()->create($data);
         } else {
-            // اگر نوع کامنت است، برای مقاله کامنت جدید ایجاد می‌شود
+            // اگر کامنت وجود نداشته باشد، کامنت جدید برای مقاله ایجاد می‌شود
             $article->comments()->create($data);
         }
 
         return response()->json([
-            'message' => 'Comment added',
+            'message' => $comment ? 'Reply added' : 'Comment added',
             'success' => true,
         ]);
     }
