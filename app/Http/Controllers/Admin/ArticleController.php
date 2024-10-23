@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateArticleRequest;
+use App\Http\Requests\ArticleUpdateRequest;
 use App\Models\Article;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +19,7 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function update(UpdateArticleRequest $request, Article $article)
+    public function update(ArticleUpdateRequest $request, Article $article)
     {
         $validated = $request->validated();
 

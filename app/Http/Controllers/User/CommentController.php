@@ -16,30 +16,6 @@ class CommentController extends Controller
         $commentableType = $request->commentable_type;
         $commentableId = $request->commentable_id;
 
-        if ($commentableType === 'reply') {
-            if (!$this->isParentCommentValid($commentableId)) {
-                return response()->json([
-                    'message' => 'Cannot reply to a non-existent comment.',
-                    'success' => false,
-                ], 400);
-            }
-
-            // بررسی وجود ریپلای قبلی برای این کامنت
-            if ($this->hasExistingReply($commentableId)) {
-                return response()->json([
-                    'message' => 'Each comment can only have one reply.',
-                    'success' => false,
-                ], 400);
-            }
-        } else { // اگر نوع کامنت "comment" است، بررسی وجود مقاله
-            if (!$this->isArticleValid($commentableId)) {
-                return response()->json([
-                    'message' => 'Article does not exist.',
-                    'success' => false,
-                ], 400);
-            }
-        }
-
         // ایجاد کامنت جدید
         $comment = Comment::create([
             'body' => $request->body,
@@ -53,23 +29,5 @@ class CommentController extends Controller
             'success' => true,
             'comment' => $comment,
         ]);
-    }
-
-    private function isParentCommentValid($commentableId)
-    {
-        return Comment::find($commentableId) !== null;
-    }
-
-
-    private function hasExistingReply($commentableId)
-    {
-        return Comment::where('commentable_id', $commentableId)
-            ->where('commentable_type', Comment::class)
-            ->exists();
-    }
-
-    private function isArticleValid($articleId)
-    {
-        return Article::where('id', $articleId)->exists();
     }
 }

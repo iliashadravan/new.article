@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateRequest;
-use App\Http\Requests\UpdateArticleRequest;
+use App\Http\Requests\ArticleStoreRequest;
+use App\Http\Requests\ArticleUpdateRequest;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
-    public function store(CreateRequest $request)
+    public function store(ArticleStoreRequest $request)
     {
         // دریافت داده‌های اعتبارسنجی‌شده از درخواست
         $validated_data = $request->validated();
@@ -35,7 +35,7 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function update(UpdateArticleRequest $request, Article $article)
+    public function update(ArticleUpdateRequest $request, Article $article)
     {
         // دریافت داده‌های اعتبارسنجی‌شده از درخواست
         $validated_data = $request->validated();
