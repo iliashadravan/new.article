@@ -18,7 +18,7 @@ class CommentController extends Controller
 
         // اگر نوع کامنت "reply" است، بررسی وجود کامنت والد
         if ($commentableType === 'reply') {
-            if (!$this->isCommentValid($commentableId)) {
+            if (!$this->isParentCommentValid($commentableId)) {
                 return response()->json([
                     'message' => 'Cannot reply to a non-existent comment.',
                     'success' => false,
@@ -56,12 +56,11 @@ class CommentController extends Controller
         ]);
     }
 
-    private function isCommentValid($commentableId)
+    private function isParentCommentValid($commentableId)
     {
-        return Comment::where('id', $commentableId)
-            ->where('commentable_type', Comment::class)
-            ->exists();
+        return Comment::find($commentableId) !== null;
     }
+
 
     private function hasExistingReply($commentableId)
     {
@@ -69,6 +68,7 @@ class CommentController extends Controller
             ->where('commentable_type', Comment::class)
             ->exists();
     }
+
     private function isArticleValid($articleId)
     {
         return Article::where('id', $articleId)->exists();
