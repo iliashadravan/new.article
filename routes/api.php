@@ -32,9 +32,7 @@ Route::middleware('jwt')->group(function () {
             Route::post('/rate/{article}', 'rate');
         });
         Route::prefix('comments')->controller(CommentController::class)->group(function () {
-            Route::post('/{article}', 'comment');
-            Route::post('/{article}/{comment}', 'comment');
-
+            Route::post('{article}/{comment?}', [CommentController::class, 'comment']);
         });
     });
 

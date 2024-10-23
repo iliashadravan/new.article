@@ -17,7 +17,6 @@ class CommentController extends Controller
             'user_id' => auth()->id(),
         ];
 
-        // بررسی اینکه آیا instance از Comment به متد پاس داده شده است یا نه
         if ($comment) {
             // اگر کامنت وجود داشته باشد، ریپلای به آن ایجاد می‌شود
             $comment->replies()->create($data);
