@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject; // افزودن این خط
 
-class User extends Authenticatable implements AuthenticatableContract, JWTSubject // افزودن JWTSubject به قراردادها
+class User extends Authenticatable implements AuthenticatableContract, JWTSubject
 {
     use HasApiTokens;
 
