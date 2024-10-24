@@ -36,7 +36,7 @@ class AuthController extends Controller
         $request->validated();
         // اعتبارسنجی کاربر
         if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'ایمیل یا رمز عبور اشتباه است.'], 401);
+            return response()->json(['message' => 'email or password is wrong'], 401);
         }
 
         // پیدا کردن کاربر با ایمیل
@@ -53,13 +53,5 @@ class AuthController extends Controller
     {
         // دریافت اطلاعات کاربر احراز شده
         return response()->json(auth()->user());
-    }
-
-    public function refresh()
-    {
-        // تازه‌سازی توکن
-        return response()->json([
-            'token' => JWTAuth::refresh(JWTAuth::getToken()),
-        ]);
     }
 }

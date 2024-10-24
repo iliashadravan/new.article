@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'jwt' => \App\Http\Middleware\CheckUserAuthenticated::class,
+            'is_admin'=> \App\Http\Middleware\CheckIsAdmin::class
 
         ]);
         $middleware->group('api', [

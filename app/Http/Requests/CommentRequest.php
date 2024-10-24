@@ -19,14 +19,14 @@ class CommentRequest extends BaseRequest
         return [
             'body' => 'required|string|max:1000|min:3',
             'commentable_id' => 'required|integer',
-            'commentable_type' => 'required|string|in:comment,reply',
+            'commentable_type' => 'required|string|in:article,comment',
         ];
     }
 
     /**
      * Configure the validator instance.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
+     * @param \Illuminate\Validation\Validator $validator
      */
     public function withValidator(Validator $validator)
     {
@@ -35,17 +35,16 @@ class CommentRequest extends BaseRequest
             $commentableId = $this->input('commentable_id');
 
             // اگر نوع کامنت "reply" است، بررسی وجود کامنت والد
-            if ($commentableType === 'reply') {
+            if ($commentableType === 'comment') {
                 if (!Comment::find($commentableId)) {
                     $validator->errors()->add('commentable_id', 'Cannot reply to a non-existent comment.');
                 }
-
                 // اینجا چک می‌کنیم که آیا کامنت والد ریپلای است یا خیر
                 $parentComment = Comment::find($commentableId);
                 if ($parentComment && $parentComment->isReply()) {
                     $validator->errors()->add('commentable_id', 'Cannot reply to a reply comment.');
                 }
-            } elseif ($commentableType === 'comment') {
+            } elseif ($commentableType === 'article') {
                 if (!Article::find($commentableId)) {
                     $validator->errors()->add('commentable_id', 'Article does not exist.');
                 }

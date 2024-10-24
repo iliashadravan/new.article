@@ -21,7 +21,7 @@ class CommentController extends Controller
             'body' => $request->body,
             'user_id' => $userId,
             'commentable_id' => $commentableId,
-            'commentable_type' => $commentableType === 'reply' ? Comment::class : Article::class,
+            'commentable_type' => $commentableType === 'comment' ? Comment::class : Article::class,
         ]);
 
         return response()->json([

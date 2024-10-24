@@ -36,7 +36,7 @@ Route::middleware('jwt')->group(function () {
         });
     });
 
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware('is_admin')->group(function () {
         Route::prefix('articles')->controller(AdminArticlesController::class)->group(function () {
             Route::get('/users/article', 'index');
             Route::put('/edit/{article}', 'update');
