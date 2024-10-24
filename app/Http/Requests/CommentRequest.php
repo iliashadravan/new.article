@@ -34,7 +34,6 @@ class CommentRequest extends BaseRequest
             $commentableType = $this->input('commentable_type');
             $commentableId = $this->input('commentable_id');
 
-            // اگر نوع کامنت "reply" است، بررسی وجود کامنت والد
             if ($commentableType === 'comment') {
                 if (!Comment::find($commentableId)) {
                     $validator->errors()->add('commentable_id', 'Cannot reply to a non-existent comment.');
