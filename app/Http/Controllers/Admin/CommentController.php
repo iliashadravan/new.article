@@ -49,5 +49,4 @@ class CommentController extends Controller
             'message' => 'Comments visibility updated successfully!'
         ]);
     }
-
 }
