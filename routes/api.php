@@ -45,6 +45,8 @@ Route::middleware('jwt')->group(function () {
         Route::prefix('comments')->controller(AdminCommentController::class)->group(function () {
             Route::get('/{article}', 'showComments');
             Route::put('/visibility/{comment}','updateCommentVisibility');
+            Route::post('/update-visibility',  'updateMultipleCommentsVisibility');
+
         });
 
         Route::prefix('users')->controller(AdminUserController::class)->group(function () {

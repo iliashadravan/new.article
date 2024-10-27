@@ -35,4 +35,19 @@ class CommentController extends Controller
             'comment' => $comment
         ]);
     }
+    public function updateMultipleCommentsVisibility(Request $request)
+    {
+        // دریافت شناسه‌های کامنت‌ها و وضعیت جدید از درخواست
+        $commentIds = $request->input('comment_ids');
+        $isVisible = $request->input('is_visible');
+
+        // بروزرسانی وضعیت قابل مشاهده بودن برای هر کامنت
+        Comment::whereIn('id', $commentIds)->update(['is_visible' => $isVisible]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comments visibility updated successfully!'
+        ]);
+    }
+
 }
